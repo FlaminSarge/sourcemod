@@ -282,10 +282,10 @@ native void TF2_RegeneratePlayer(int client);
  * @param condition     Integer identifier of condition to apply.
  * @param duration      Duration of condition (does not apply to all conditions).
  *                      Pass TFCondDuration_Infinite to apply until manually removed.
- * @param inflictor     Condition inflictor's index (0 for no inflictor).
+ * @param provider      Condition provider's index (0 for no provider).
  * @error               Invalid client index, client not in game, or no mod support.
  */
-native void TF2_AddCondition(int client, TFCond condition, float duration=TFCondDuration_Infinite, int inflictor=0);
+native void TF2_AddCondition(int client, TFCond condition, float duration=TFCondDuration_Infinite, int provider=0);
 
 /**
  * Removes a condition from a player
@@ -425,6 +425,42 @@ native bool TF2_IsPlayerInDuel(int client);
 native void TF2_RemoveWearable(int client, int wearable);
 
 /**
+ * Adds TFCond_TmpDamageBonus to a player and properly adds to the damage multiplier.
+ * Stacks additively with current multiplier.
+ *
+ * @param client        Player's index.
+ * @param multiplier    Damage multiplier to add to current multiplier.
+ * @param duration      Duration of bonus.
+ *                      Pass TFCondDuration_Infinite to apply until manually removed.
+ * @param provider      Condition provider's index (0 for no provider).
+ * @return              Resulting damage multiplier.
+ * @error               Invalid client index, client not in game, or no mod support.
+ */
+native float TF2_AddTmpDamageBonus(int client, float multiplier, float duration=TFCondDuration_Infinite, int provider=0);
+
+/**
+ * Adds TFCond_TmpDamageBonus to a player and properly sets the damage multiplier.
+ * Overwrites current multiplier.
+ *
+ * @param client        Player's index.
+ * @param multiplier    Damage multiplier to set (1.0 is normal damage).
+ * @param duration      Duration of bonus.
+ *                      Pass TFCondDuration_Infinite to apply until manually removed.
+ * @param provider      Condition provider's index (0 for no provider).
+ * @error               Invalid client index, client not in game, or no mod support.
+ */
+native void TF2_SetTmpDamageBonus(int client, float multiplier, float duration=TFCondDuration_Infinite, int provider=0);
+
+/**
+ * Gets current multiplier for TFCond_TmpDamageBonus for a player.
+ *
+ * @param client        Player's index.
+ * @return              Current damage multiplier.
+ * @error               Invalid client index, client not in game, or no mod support.
+ */
+native float TF2_GetTmpDamageBonus(int client);
+
+/**
  * Called after a condition is added to a player
  *
  * @param client        Index of the client to which the condition is being added.
@@ -496,5 +532,8 @@ public void __ext_tf2_SetNTVOptional()
 	MarkNativeAsOptional("TF2_IsPlayerInDuel");
 	MarkNativeAsOptional("TF2_IsHolidayActive");
 	MarkNativeAsOptional("TF2_RemoveWearable");
+	MarkNativeAsOptional("TF2_AddTmpDamageBonus");
+	MarkNativeAsOptional("TF2_SetTmpDamageBonus");
+	MarkNativeAsOptional("TF2_GetTmpDamageBonus");
 }
 #endif
